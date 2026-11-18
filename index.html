@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Сборка ГБЦ — CL203 M111.981</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --paper: #fffcf7;
+      --ink: #1c1915;
+      --muted: #5e584e;
+      --line: #ddd4c4;
+      --accent: #9a3412;
+      --info: #1e40af;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font: 16px/1.5 "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(1200px 500px at 10% -10%, #efe2c8 0%, transparent 50%), var(--bg);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 18px 80px; }
+    header.hero, section, nav.toc {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 30px rgb(60 40 10 / 6%);
+    }
+    header.hero { border-radius: 18px; padding: 22px 24px; }
+    .kicker { color: var(--accent); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 12px; }
+    h1 { margin: 6px 0 8px; font-size: 28px; line-height: 1.2; }
+    .meta { color: var(--muted); }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .pill { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 999px; padding: 4px 10px; font-size: 13px; }
+    nav.toc { margin: 22px 0; border-radius: 14px; padding: 14px 18px; }
+    nav.toc a { color: var(--info); text-decoration: none; }
+    nav.toc ol { margin: 8px 0 0; padding-left: 22px; }
+    section { border-radius: 16px; padding: 18px 20px 10px; margin: 16px 0; }
+    h2 { margin: 0 0 12px; font-size: 20px; }
+    h3 { margin: 18px 0 8px; font-size: 16px; }
+    .step { display: grid; grid-template-columns: 52px 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .num {
+      width: 44px; height: 44px; border-radius: 12px; background: #1c1915; color: #fff;
+      display: flex; align-items: center; justify-content: center; font-weight: 700;
+    }
+    .call { color: var(--accent); font-weight: 700; }
+    .note, .install, .warn {
+      margin: 8px 0 0; padding: 8px 10px; border-radius: 10px; font-size: 14px;
+    }
+    .note { background: #eff6ff; color: #1e3a8a; }
+    .install { background: #f0fdf4; color: #14532d; }
+    .warn { background: #fff7ed; color: #9a3412; }
+    .danger {
+      background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3;
+      border-radius: 12px; padding: 10px 12px; margin: 8px 0 14px;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 14px; }
+    th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: #faf6ee; }
+    .torque { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+    .photos { display: grid; gap: 12px; }
+    .photos img, .tools img, .diagram {
+      width: 100%; border-radius: 12px; border: 1px solid var(--line); cursor: zoom-in;
+    }
+    .diagram { background: #fff; max-width: 720px; }
+    .tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .tool { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px; text-align: center; font-size: 13px; }
+    .legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 14px; font-size: 14px; }
+    .legend b { color: var(--accent); }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 720px) { .split { grid-template-columns: 1fr; } }
+    .lightbox {
+      position: fixed; inset: 0; background: rgb(10 8 6 / 88%);
+      display: none; align-items: center; justify-content: center; padding: 20px; z-index: 9;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 96vw; max-height: 92vh; border-radius: 8px; }
+    footer { color: var(--muted); font-size: 12px; margin-top: 24px; }
+    @media print {
+      .lightbox, nav.toc { display: none !important; }
+      section, header.hero { break-inside: avoid; box-shadow: none; }
+      .step { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="kicker">Пошаговая сборка · CL203</div>
+      <h1>Установка головки блока M111.981</h1>
+      <p class="meta">
+        Кузов <mark>203.747</mark> · мотор <mark>111.981</mark> · АКПП 722.6 где помечено<br>
+        Каркас: <b>AR01.30-P-5800PK</b>. Вшиты также 01GS, 03HA, 04GS, 06GS, 6020GS, 6010GS, 6992, 7800PK, 5700PK, 5014PK, 2710PK.
+      </p>
+      <div class="pills">
+        <span class="pill">ГБЦ: 55 Н·м → 90° → 90°, порядок 1–10 от центра</span>
+        <span class="pill">Сборка ГРМ: 20° после ВМТ · проверка: 25°±2 / 28°±2</span>
+        <span class="pill">Натяжитель: кольца новые, 80 / 40 Н·м</span>
+      </div>
+    </header>
+
+    <nav class="toc">
+      <b>Содержание</b>
+      <ol>
+        <li><a href="#prep">Запчасти, моменты, инструмент</a></li>
+        <li><a href="#bolts">Болты: резьба и шлиц (Torx / шестигранник)</a></li>
+        <li><a href="#a">А. Проверка ГБЦ и болтов</a></li>
+        <li><a href="#b">Б. Посадка головы и схема 1–10</a></li>
+        <li><a href="#c">В. ГРМ: валы, цепь, натяжитель</a></li>
+        <li><a href="#check">Г. Проверка меток валов 25° / 28°</a></li>
+        <li><a href="#d">Д. Передняя крышка и термостат</a></li>
+        <li><a href="#e">Е. Выпуск, ОЖ, компрессор, вентиляция</a></li>
+        <li><a href="#f">Ж. Впуск, топливо, вакуум</a></li>
+        <li><a href="#g">З. Крышка ГБЦ и запуск</a></li>
+        <li><a href="#photos">Общие фото щиты</a></li>
+      </ol>
+    </nav>
+
+    <section id="prep">
+      <h2>Запчасти и моменты</h2>
+      <div class="danger">Самоконтрящиеся болты/гайки повторно не ставить. Топливо и ОЖ — защита. Крышки подшипников распредвалов только на свои номера, иначе убьёте мотор.</div>
+      <ul>
+        <li>Прокладка ГБЦ, прокладки впуска, прокладка крышки ГБЦ <span class="call">6</span></li>
+        <li>О-кольца: воздухозаборник, передняя крышка, термостат <span class="call">31</span>, отопитель</li>
+        <li>Кольца трубы EGR и <b>два кольца натяжителя</b> (2 и 4)</li>
+        <li>Болты ГБЦ если L &gt; 105 мм; болты звёздочки выпуска; болты ГБЦ–крышка цепи</li>
+        <li>Герметик Omnifit FD 3041 · <b>A 002 989 47 20 10</b> — болт успокоителя и передняя крышка</li>
+      </ul>
+      <table>
+        <thead><tr><th>Узел</th><th>Момент</th></tr></thead>
+        <tbody>
+          <tr><td>Болт ГБЦ M12</td><td class="torque">55 Н·м → 90° → 90°</td></tr>
+          <tr><td>ГБЦ к крышке цепи (A на схеме, M8 + шайба)</td><td class="torque">18 Н·м → 90°</td></tr>
+          <tr><td>Звёздочка распредвала</td><td class="torque">20 Н·м → 60°</td></tr>
+          <tr><td>Крышка подшипника распредвала</td><td class="torque">21 Н·м</td></tr>
+          <tr><td>Верхний успокоитель</td><td class="torque">10 Н·м</td></tr>
+          <tr><td>Корпус натяжителя в крышке цепи</td><td class="torque">80 Н·м</td></tr>
+          <tr><td>Наконечник натяжителя</td><td class="torque">40 Н·м</td></tr>
+          <tr><td>Передняя крышка ГБЦ и корпус термостата M6 / M8</td><td class="torque">10 / 25 Н·м</td></tr>
+          <tr><td>Болт демпфера натяжителя ремня (49)</td><td class="torque">25 Н·м</td></tr>
+          <tr><td>Крышка ГБЦ / декоративная</td><td class="torque">10 / 9 Н·м</td></tr>
+          <tr><td>Впуск к ГБЦ, выпускные фланцы</td><td class="torque">20 Н·м</td></tr>
+        </tbody>
+      </table>
+      <h3>Специнструмент из листов</h3>
+      <div class="tools">
+        <div class="tool"><img src="images/03_104589010100.png" alt="104 589 01 01 00"><div>Шпилька / удержание вала<br><b>104 589 01 01 00</b></div></div>
+        <div class="tool"><img src="images/AR01.30-P-5800-04GS_01_116589203300.png" alt="116 589 20 33 00"><div>Оправка успокоителя<br><b>116 589 20 33 00</b></div></div>
+        <div class="tool"><img src="images/AR01.30-P-5800-04GS_02_605589003300.png" alt="605 589 00 33 00"><div>Съёмник<br><b>605 589 00 33 00</b></div></div>
+        <div class="tool"><img src="images/AR01.30-P-5800-04GS_03_116589023400.png" alt="116 589 02 34 00"><div>Резьбовая вставка<br><b>116 589 02 34 00</b> (271.8; для 111 — 01 34 00)</div></div>
+        <div class="tool"><img src="images/AR05.20-P-6010GS_02_111589031500.png" alt="111 589 03 15 00"><div>Стопорные пальцы валов<br><b>111 589 03 15 00</b></div></div>
+      </div>
+    </section>
+
+    <section id="bolts">
+      <h2>Болты: куда, резьба, шлиц</h2>
+      <div class="warn">
+        WIS пишет <b>резьбу и момент</b>, тип головки — почти никогда. Ниже: из BA-таблиц + что видно на заводских фото.
+        На вашей машине половина Torx уже заменена на шестигранник — <b>смотрите факт на детали</b>, не ломайте грани «правильным» ключом не той формы.
+      </div>
+      <p>Завод M111.981 обычно так: мелкий крепёж крышек — <b>Torx</b>, силовые растягиваемые и крупные пробки — <b>12-гранник / наружный шестигранник</b>. После чужих рук берите на яму оба набора: Torx T25–T50, шестигранники 8 / 10 / 12 / 13, и обязательно <b>12-гранную головку 12 мм</b> на болты ГБЦ.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Куда</th>
+            <th>Поз. / WIS</th>
+            <th>Резьба, сколько</th>
+            <th>Шлиц (завод / что бывает)</th>
+            <th>Момент</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Головка блока к блоку</td>
+            <td>1–10 · BA01.30-P-1002-01B</td>
+            <td><b>M12</b> × 1.5, длина новая 102 мм, макс. 105 мм · <b>10 шт</b></td>
+            <td>Завод: <b>12-гранник SW12</b> (не Torx). После замены часто обычный шестигранник 12 мм — садится хуже, легко слизать</td>
+            <td class="torque">55 → 90° → 90°</td>
+          </tr>
+          <tr>
+            <td>ГБЦ к крышке цепи</td>
+            <td>A / 32 · BA01.40-P-1002-01G</td>
+            <td><b>M8 + шайба</b> · на схеме 01GS три точки A · <b>менять</b></td>
+            <td>На фото WIS головка как <b>наружный шестигранник</b> (часто 10 или 12 мм). Может стоять Torx T40/T45</td>
+            <td class="torque">18 → 90°</td>
+          </tr>
+          <tr>
+            <td>Крышки подшипников распредвалов</td>
+            <td>крышки 1–10 · BA05.20-P-1004-02A</td>
+            <td>WIS резьбу не дал; типично <b>M8</b>, по 2 болта на крышку ≈ 20 шт</td>
+            <td>На схемах — внешняя головка. Завод часто <b>Torx T40</b> или шестигранник <b>10 мм</b>. Не путать крышки местами</td>
+            <td class="torque">21 Н·м</td>
+          </tr>
+          <tr>
+            <td>Звёздочка выпускного вала</td>
+            <td>28 / 29 · BA05.20-P-1001-02A</td>
+            <td>WIS резьбу не дал; на фото <b>3 болта</b> · <b>только новые</b></td>
+            <td>На фото похожи на 12-гранник / мелкий hex. Держать вал при откручивании (104 589 01 01 00)</td>
+            <td class="torque">20 → 60°</td>
+          </tr>
+          <tr>
+            <td>Верхний успокоитель цепи</td>
+            <td>26 / 27 · BA05.10-P-1003-01B</td>
+            <td>WIS резьбу не дал; обычно <b>M6</b>, 2 болта</td>
+            <td>Мелкие: завод чаще <b>Torx T30</b>, у вас могут быть hex 8/10 мм</td>
+            <td class="torque">10 Н·м</td>
+          </tr>
+          <tr>
+            <td>Ось/палец левого успокоителя</td>
+            <td>11 · 04GS</td>
+            <td>Не обычный болт, а <b>палец</b> с внутренней резьбой под съёмник</td>
+            <td>Крутить не ключом по шлицу, а съёмником 02/04 (на съёмнике — шестигранник)</td>
+            <td>посадка на герметик</td>
+          </tr>
+          <tr>
+            <td>Корпус натяжителя цепи</td>
+            <td>3 · BA05.10-P-1002-01B</td>
+            <td>Крупная резьба в крышку цепи · 1 шт</td>
+            <td><b>Большой наружный шестигранник</b> (не Torx), обычно 27 или 32 мм</td>
+            <td class="torque">80 Н·м</td>
+          </tr>
+          <tr>
+            <td>Наконечник натяжителя</td>
+            <td>1 · BA05.10-P-1001-01B</td>
+            <td>1 шт, кольца 2 и 4 новые</td>
+            <td>Тоже <b>наружный шестигранник</b>, меньше корпуса</td>
+            <td class="torque">40 Н·м</td>
+          </tr>
+          <tr>
+            <td>Передняя крышка ГБЦ</td>
+            <td>BA01.30-P-1001-01B</td>
+            <td>Смесь <b>M6</b> (10 Н·м) и <b>M8</b> (25 Н·м)</td>
+            <td>Классика эпохи: M6 = Torx <b>T30</b>, M8 = Torx <b>T40</b>. У вас часть уже hex 8/10 мм</td>
+            <td class="torque">10 / 25 Н·м</td>
+          </tr>
+          <tr>
+            <td>Корпус термостата</td>
+            <td>7, 8 · BA20.10-P-1003-01B</td>
+            <td><b>M6</b> и <b>M8</b></td>
+            <td>На фото 2710PK — явно <b>наружный шестигранник с буртиком</b> (не внутренний Torx)</td>
+            <td class="torque">10 / 25 Н·м</td>
+          </tr>
+          <tr>
+            <td>Проушина / демпфер ролика ремня</td>
+            <td>6 и 49, болт 9</td>
+            <td>WIS для 49: 25 Н·м</td>
+            <td>На фото — <b>шестигранник с шайбой</b></td>
+            <td class="torque">25 Н·м (49)</td>
+          </tr>
+          <tr>
+            <td>Крышка ГБЦ</td>
+            <td>4 · BA01.20-P-1001-01B</td>
+            <td>WIS резьбу не дал; обычно <b>M6</b>, по периметру</td>
+            <td>Завод чаще Torx <b>T30</b>; декоративная крышка свечей — отдельный болт 9 Н·м</td>
+            <td class="torque">10 Н·м</td>
+          </tr>
+          <tr>
+            <td>Декор / крышка свечей</td>
+            <td>2 · BA01.20-P-1002-01B</td>
+            <td>обычно M6</td>
+            <td>Часто hex или Torx T30</td>
+            <td class="torque">9 Н·м</td>
+          </tr>
+          <tr>
+            <td>Впуск к ГБЦ</td>
+            <td>BA09.20-P-1001-01B</td>
+            <td>болты <b>и гайки</b>, типично M8</td>
+            <td>Гайки — почти всегда <b>наружный шестигранник 12 или 13 мм</b></td>
+            <td class="torque">20 Н·м</td>
+          </tr>
+          <tr>
+            <td>Кронштейн выпуска к КПП / фланец выпуска</td>
+            <td>22 · BA49.10-P-1003/1005</td>
+            <td>типично M8 / M10</td>
+            <td>Шестигранник 12–13 мм, иногда 15 мм на фланце</td>
+            <td class="torque">20 Н·м</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">
+        <b>Как не убить шлиц на смешанном моторе.</b> Сначала глаз или зеркало: звезда Torx, 6 граней или 12 граней.
+        На растягиваемых (ГБЦ, звёздочка, M8 к крышке цепи) не ставьте «какой был в ящике» без класса прочности 10.9/12.9 и той же длины.
+        Слизанный Torx не лечится шестигранником меньшего размера в дырку — только нормальная головка или высверливание.
+      </div>
+      <p class="meta">Точный каталожный шлиц (T40 vs SW10) WIS в этих AR не пишет. Если нужно до штуки из EPC — сохраните карточку детали из Superetka ETKA/каталога по номеру BA или по узлу «cylinder head / camshaft».</p>
+    </section>
+
+    <section id="a">
+      <h2>А. Проверка ГБЦ и болтов</h2>
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          Плоскости головы и блока — трещины, неровности. При шлифовке: AR01.30-P-7162GS.
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <b>AR01.30-P-5800-03HA.</b> Измерить длину болта <b>L</b> (мотор 111 — схема слева). Новый 102 мм, если больше <b>105 мм — только новые</b>.
+          <div class="split">
+            <div>
+              <img class="diagram" src="images/AR01.30-P-5800-03HA_01_p0130213901.png" alt="Длина болта 111">
+              <div class="meta">111 / 271 — ваш размер</div>
+            </div>
+            <div>
+              <img class="diagram" src="images/AR01.30-P-5800-03HA_02_p0130033401.png" alt="Длина болта 60x">
+              <div class="meta">602–606 — не ваш мотор</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div>Продуть резьбы болтов ГБЦ в блоке сжатым воздухом.</div>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <div>Установочные втулки <span class="call">33</span> на месте. Без них голова сядет криво.</div>
+      </div>
+    </section>
+
+    <section id="b">
+      <h2>Б. Посадка головы · AR01.30-P-5800-01GS</h2>
+      <p>Слева на схеме — крышка цепи (перед мотора, цилиндр 1). Затягивать <b>строго по номерам 1→10</b>, от центра наружу. Три подхода: 55 Н·м, потом 90°, потом ещё 90°. Резьбу и торец головки болта слегка маслом. <b>Потом не дотягивать.</b></p>
+      <img class="diagram" src="images/AR01.30-P-5800-01GS_01_p0130023005.png" alt="Порядок затяжки 1-10">
+      <p class="note">
+        <b>A</b> — болт + шайба M8 к крышке цепи (это поз. 32 в общем листе): новые, под головку чуть масла, <b>18 Н·м → 90°</b>.<br>
+        WIS подписывает <b>B 35 (to timing case cover)</b> — рядом с передней стенкой; не путать с порядком 1–10.
+      </p>
+      <div class="step">
+        <div class="num">5</div>
+        <div>
+          Посадить ГБЦ на втулки. Затянуть десять M12 по схеме: 1-2-3-4-5-6-7-8-9-10.
+          <div class="install">55 Н·м → 90° → 90°. Мотор при снятии ослабляли только холодным и в обратном порядке.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">6</div>
+        <div>Болты ГБЦ–крышка цепи <span class="call">A / 32</span>: новые, 18 Н·м → 90°.</div>
+      </div>
+    </section>
+
+    <section id="c">
+      <h2>В. ГРМ · AR05.20-P-6020GS + 6992 + 7800PK + 04GS</h2>
+      <div class="danger">
+        Коленвал: поршень 1-го цилиндра <b>20° после ВМТ зажигания</b>. Метка <b>A</b> на шкиве совпадает с кромкой <b>B</b> на крышке цепи.
+        Кулачки обоих валов у 1-го цилиндра смотрят <b>вверх под углом</b>. Иначе риск сломать вал.
+      </div>
+      <img class="diagram" src="images/AR05.20-P-6020GS_01_p0520206709.png" alt="База распредвалов">
+      <p class="meta">2 натяжитель · 3 верхний успокоитель · 4 его болты · 5 звёздочка выпуска · 6 болты звёздочки · A/B метка 20°</p>
+
+      <h3>Крышки подшипников · AH05.20-N-6992-01A (мотор 111)</h3>
+      <p>Нумерация <b>1–10 спереди выпускного вала</b>. Цифры выбиты на крышке и отлиты в голове. Ставить только туда, откуда сняли.</p>
+      <img class="diagram" src="images/AH05.20-N-6992-01A_01_s0520300411.png" alt="Номера крышек 1-10">
+      <p class="meta">Сверху выпуск 1–5 (цепь слева), снизу впуск 6–10. 21 Н·м.</p>
+
+      <div class="step">
+        <div class="num">7</div>
+        <div>
+          <b>Болт левого успокоителя с герметиком</b> Omnifit FD 3041. Лист 04GS — про выпрессовку; посадка — обратная, с герметиком.
+          <div class="split">
+            <div>
+              <img class="diagram" src="images/AR01.30-P-5800-04GS_04_p0130023801.png" alt="Съём ударным">
+              <div class="meta">Снятие A: вставка 03 в болт 11, ударный съёмник 02</div>
+            </div>
+            <div>
+              <img class="diagram" src="images/AR01.30-P-5800-04GS_05_d0130005901.png" alt="Съём шестигранником">
+              <div class="meta">Снятие B: съёмник 04, крутить шестигранник</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">8</div>
+        <div>
+          Повернуть впускной вал в базу и застопорить пальцем <b>111 589 03 15 00</b> через отверстие в крышке подшипника впуска <span class="call">13</span>.
+          Кулачки у цил. 1 вверх под углом.
+          <div class="warn">
+            На моторе с фазовращателем (у 111.981 он есть): окружные упоры <span class="call">14</span> на звёздочке впуска должны стоять в положении
+            <b>late</b> — упор в вырезы промежуточного вала по направлению вращения.
+          </div>
+          Надеть цепь на звёздочку впуска. Осевой зазор вала 0.05–0.15 мм.
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">9</div>
+        <div>
+          Выпускной вал в базу, стопор через крышку выпуска <span class="call">9</span>. Кулачки цил. 1 вверх под углом.
+          Поставить звёздочку выпуска вместе с цепью. При затяжке болтов <span class="call">6</span> удерживать вал ключом/шпилькой 104 589 01 01 00.
+          <div class="install">Болты звёздочки <b>новые</b>: 20 Н·м → 60°. Цветные метки цепи со снятия должны совпасть.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">10</div>
+        <div>
+          Вынуть оба стопорных пальца. Верхний успокоитель — 10 Н·м.
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">11</div>
+        <div>
+          <b>Натяжитель AR05.10-P-7800PK</b> (ваш 111.981).
+          <ul>
+            <li>Новые кольца <span class="call">2</span> и <span class="call">4</span>. Сборка натяжителя, если его разбирали: AR05.10-P-7800-02GS (листа нет — не ослаблять «наполовину»).</li>
+            <li>Если натяжитель только открутили и не сняли целиком — WIS требует снять, разобрать и собрать заново.</li>
+            <li>Корпус в крышку цепи <b>80 Н·м</b>, наконечник <b>40 Н·м</b>.</li>
+            <li>На 111.955/981 перед этим компрессор уже снят, генератор накрыт чистой ветошью — ветошь убрать после установки.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="check">
+      <h2>Г. Проверка меток · AR05.20-P-6010GS</h2>
+      <div class="danger">
+        Это не те 20°, на которых собирали ГРМ. Проверка: впуск <b>25° ± 2°</b> после ВМТ зажигания цил. 1, выпуск <b>28° ± 2°</b>.
+        Крышка ГБЦ должна быть снята. Палец <b>111 589 03 15 00</b> должен входить в отверстие вала через крышку подшипника. Если не входит — цепь на зуб (~20° коленвала), возвращаться к AR05.20-P-6020GS.
+      </div>
+      <img class="diagram" src="images/AR05.20-P-6010GS_01_p0520206509.png" alt="Проверка базы валов">
+      <p class="meta">A кромка крышки цепи · 1 шкив · 2 впускной вал · 3 палец · 4 крышка впуска · 5 упоры late · 6 звёздочка впуска · 7 выпускной вал · 8 крышка выпуска</p>
+      <div class="step">
+        <div class="num">12</div>
+        <div>
+          Крутить коленвал по ходу вращения до <b>25° ± 2°</b> после ВМТ цил. 1 (метка 25° на шкиве к кромке A). Кулачки впуска у цил. 1 вверх под углом.
+          Палец через крышку подшипника впуска <span class="call">4</span> должен войти в вал. На фазовращателе упоры <span class="call">5</span> снова в положении <b>late</b>. Вынуть палец.
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">13</div>
+        <div>
+          Дальше по ходу вращения до <b>28° ± 2°</b> после ВМТ цил. 1. Кулачки выпуска у цил. 1 вверх под углом.
+          Палец через крышку выпуска <span class="call">8</span> должен войти в выпускной вал. Вынуть палец.
+        </div>
+      </div>
+    </section>
+
+    <section id="d">
+      <h2>Д. Передняя крышка и термостат · 5700PK + 2710PK</h2>
+      <p class="meta">111.951/955/981. Соленоид фаз Y49. ОЖ — перчатки и очки.</p>
+      <div class="step">
+        <div class="num">14</div>
+        <div>
+          Передняя крышка ГБЦ: новое О-кольцо, плоскость Omnifit FD 3041. Болты <b>M6 10 Н·м, M8 25 Н·м</b>.
+          Разъёмы и жгут Y49 и датчика ОЖ B11/4 — после крышки, когда термостат уже на месте, либо сразу, если так удобнее доступом.
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">15</div>
+        <div>
+          <b>AR20.10-P-2710PK.</b> Корпус термостата <span class="call">30</span> вместе с термостатом <span class="call">27</span>.
+          <img class="diagram" src="images/AR20.10-P-2710PK_01_p2010201909.png" alt="Корпус термостата">
+          <ul>
+            <li>Плоскости корпуса и передней крышки — чистые. Новое кольцо <span class="call">31</span>.</li>
+            <li>Болты корпуса <span class="call">7, 8</span>: M6 <b>10 Н·м</b>, M8 <b>25 Н·м</b>.</li>
+            <li>Болт проушины <span class="call">6 / 9</span> и болт демпфера натяжителя ремня <span class="call">49 / 9</span>: демпфер <b>25 Н·м</b>.</li>
+            <li>Патрубки ОЖ <span class="call">2, 3, 4</span> — осмотреть, хомуты при необходимости новые. Разъём B11/4.</li>
+            <li>Укрытие <span class="call">16</span> и корпус фильтра — позже, вместе с верхом.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="e">
+      <h2>Е. Выпуск, охлаждение, компрессор, вентиляция</h2>
+      <div class="step">
+        <div class="num">16</div>
+        <div>Трубка отопителя <span class="call">23</span>, клипса <span class="call">24</span> до щелчка. Новое уплотнение.</div>
+      </div>
+      <div class="step">
+        <div class="num">17</div>
+        <div>Кронштейны EGR сзади ГБЦ, труба <span class="call">21</span> к картеру — новые кольца. Кронштейн выпуска <span class="call">22</span> к КПП — 20 Н·м.</div>
+      </div>
+      <div class="step">
+        <div class="num">18</div>
+        <div>ОЖ (обратный AR20.00-P-1142PR) после того как термостат и патрубки стоят. Нижняя защита AR61.20-P-1105P.</div>
+      </div>
+      <div class="step">
+        <div class="num">19</div>
+        <div>Компрессор → штуцеры → ремень (AR09.50-P-4705PK, 8841PK, AR13.21-P-1202PK). На 111.981 компрессор ещё закрывал натяжитель — к шагу 11 он уже должен быть на месте.</div>
+      </div>
+      <div class="step">
+        <div class="num">20</div>
+        <div>
+          <b>AR01.30-P-5800-06GS.</b> Шланг вентиляции картера <span class="call">7</span> снизу впуска на <b>T-штуцер</b> (стрелка), затем трубка на голове.
+          <img class="diagram" src="images/AR01.30-P-5800-06GS_01_p0130024401.png" alt="T-штуцер вентиляции">
+        </div>
+      </div>
+    </section>
+
+    <section id="f">
+      <h2>Ж. Впуск, топливо, вакуум</h2>
+      <div class="step">
+        <div class="num">21</div>
+        <div>Впуск к ГБЦ: чистые плоскости, новые прокладки, <b>20 Н·м</b>.</div>
+      </div>
+      <div class="step">
+        <div class="num">22</div>
+        <div>Рампа с форсунками AR07.03-P-1450GS. Топливо — защита.</div>
+      </div>
+      <div class="step">
+        <div class="num">23</div>
+        <div><b>722.6:</b> трубка щупа к проушине. Кронштейн 11, клапан Y32 (два вакуума), хомут EGR 10. Вакуум 8 и вакуум 6 к насосу M56 (два фиксатора на защёлке).</div>
+      </div>
+    </section>
+
+    <section id="g">
+      <h2>З. Крышка ГБЦ · AR01.20-P-5014PK и запуск</h2>
+      <div class="step">
+        <div class="num">24</div>
+        <div>
+          Новая прокладка крышки <span class="call">6</span>. Резинка жгута в крышке — ровно в пазу. Лист укладки AR01.20-P-5014-01GS на Superetka не нашёлся: посадить прокладку без складок и вылезания из паза, особенно по углам и вокруг свечных колодцев.
+          <div class="install">Болты крышки ГБЦ <b>10 Н·м</b>. Масса на крышке. Разъём ДПРВ. Вентиляционные трубки — осмотреть, при трещинах новые.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">25</div>
+        <div>
+          Катушки AR15.12-P-2003PR. Крышка свечей: прокладку осмотреть. Болт декоративной крышки <b>9 Н·м</b>. Передняя декоративная крышка мотора. Воздухозаборник — новое О-кольцо. Привод заслонки с резонатором AR09.50-P-8842PK. Корпус фильтра AR09.10-P-1150PK.
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">26</div>
+        <div>
+          Запуск: течи масла/ОЖ/топлива. Опрессовка охлаждения AR20.00-P-1010P. Память ошибок STAR — считать и стереть.
+          <div class="danger">Ручник, одежда без болтающегося, не лезть к ремню и выпускному коллектору.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="photos">
+      <h2>Общие фото щиты с родителя AR01.30-P-5800PK</h2>
+      <div class="photos">
+        <img src="images/01_p0130208109.png" alt="Верх мотора">
+        <img src="images/02_p0130208209.png" alt="Низ и цепь">
+      </div>
+      <div class="legend" style="margin-top:12px">
+        <div><b>2–5</b> резонатор, крышки, ГБЦ, заборник</div>
+        <div><b>6 / 8 / M56</b> вакуум тормозов</div>
+        <div><b>13 / 14</b> рампа / впуск</div>
+        <div><b>17 / 18</b> компрессор / натяжитель</div>
+        <div><b>21 / 22</b> EGR / кронштейн выпуска</div>
+        <div><b>25 / A</b> 20° / кромка крышки цепи</div>
+        <div><b>28–31</b> звёздочки и цепь</div>
+        <div><b>32 / 33</b> болты к крышке цепи / штифты</div>
+      </div>
+    </section>
+
+    <footer>
+      Сборка для ямы из ваших копий Superetka WIS. Не нашлись и не критичны для порядка: AR05.10-P-7800-02GS (внутренняя сборка натяжителя, если его разбирали) и AR01.20-P-5014-01GS (картинка укладки прокладки крышки). Клик по картинке — зум.
+    </footer>
+  </div>
+  <div class="lightbox" id="lb"><img alt=""></div>
+  <script>
+    const lb = document.getElementById("lb");
+    const img = lb.querySelector("img");
+    document.querySelectorAll("img").forEach((el) => {
+      el.addEventListener("click", () => { img.src = el.currentSrc || el.src; lb.classList.add("open"); });
+    });
+    lb.addEventListener("click", () => lb.classList.remove("open"));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") lb.classList.remove("open"); });
+  </script>
+</body>
+</html>
