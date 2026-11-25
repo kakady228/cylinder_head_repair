@@ -1,0 +1,153 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Подключение трубок — CL203 M111.981</title><style>
+
+    :root {
+      --bg: #f3efe6;
+      --paper: #fffcf7;
+      --ink: #1c1915;
+      --muted: #5e584e;
+      --line: #ddd4c4;
+      --accent: #9a3412;
+      --info: #1e40af;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font: 16px/1.5 "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(1200px 500px at 10% -10%, #efe2c8 0%, transparent 50%), var(--bg);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 18px 80px; }
+    header.hero, section, nav.toc {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 30px rgb(60 40 10 / 6%);
+    }
+    header.hero { border-radius: 18px; padding: 22px 24px; }
+    .kicker { color: var(--accent); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 12px; }
+    h1 { margin: 6px 0 8px; font-size: 28px; line-height: 1.2; }
+    .meta { color: var(--muted); }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .pill { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 999px; padding: 4px 10px; font-size: 13px; }
+    nav.toc { margin: 22px 0; border-radius: 14px; padding: 14px 18px; }
+    nav.toc a { color: var(--info); text-decoration: none; }
+    nav.toc ol { margin: 8px 0 0; padding-left: 22px; }
+    section { border-radius: 16px; padding: 18px 20px 10px; margin: 16px 0; }
+    h2 { margin: 0 0 12px; font-size: 20px; }
+    h3 { margin: 18px 0 8px; font-size: 16px; }
+    .step { display: grid; grid-template-columns: 52px 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .num {
+      width: 44px; height: 44px; border-radius: 12px; background: #1c1915; color: #fff;
+      display: flex; align-items: center; justify-content: center; font-weight: 700;
+    }
+    .call { color: var(--accent); font-weight: 700; }
+    .note, .install, .warn {
+      margin: 8px 0 0; padding: 8px 10px; border-radius: 10px; font-size: 14px;
+    }
+    .note { background: #eff6ff; color: #1e3a8a; }
+    .install { background: #f0fdf4; color: #14532d; }
+    .warn { background: #fff7ed; color: #9a3412; }
+    .danger {
+      background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3;
+      border-radius: 12px; padding: 10px 12px; margin: 8px 0 14px;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 14px; }
+    th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: #faf6ee; }
+    .torque { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+    .photos { display: grid; gap: 12px; }
+    .photos img, .tools img, .diagram {
+      width: 100%; border-radius: 12px; border: 1px solid var(--line); cursor: zoom-in;
+    }
+    .diagram { background: #fff; max-width: 720px; }
+    .tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .tool { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px; text-align: center; font-size: 13px; }
+    .legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 14px; font-size: 14px; }
+    .legend b { color: var(--accent); }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 720px) { .split { grid-template-columns: 1fr; } }
+    .lightbox {
+      position: fixed; inset: 0; background: rgb(10 8 6 / 88%);
+      display: none; align-items: center; justify-content: center; padding: 20px; z-index: 9;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 96vw; max-height: 92vh; border-radius: 8px; }
+    footer { color: var(--muted); font-size: 12px; margin-top: 24px; }
+    @media print {
+      .lightbox, nav.toc { display: none !important; }
+      section, header.hero { break-inside: avoid; box-shadow: none; }
+      .step { break-inside: avoid; }
+    }
+      a { color: var(--info); }
+    .step { grid-template-columns: 44px minmax(0, 1fr); }
+    .step h3, .step p:first-of-type { margin-top: 0; }
+    figure { margin: 12px 0 4px; }
+    figcaption { color: var(--muted); font-size: .875rem; }
+    .check li { margin-block: 8px; }
+    .check input { accent-color: var(--accent); }
+    dialog { max-width: 96vw; max-height: 94vh; padding: 12px; border: 0; border-radius: 12px; }
+    dialog::backdrop { background: rgb(10 8 6 / 88%); }
+    dialog img { display: block; max-width: 90vw; max-height: 82vh; object-fit: contain; }
+    dialog form { text-align: right; margin-bottom: 6px; }
+    button { font: inherit; cursor: pointer; }
+    @media print { dialog { display: none; } section { break-inside: auto; } }</style></head>
+<body><main class="wrap">
+<header class="hero"><div class="kicker">Mercedes-Benz C 230 Kompressor · CL203</div>
+<h1>Подключение трубок после установки ГБЦ</h1><p class="meta">Кузов 203.747 · двигатель M111.981 · ветка M56 для АКПП 722.6. Номера действуют в пределах соответствующего рисунка. Нажми на фото или схему для увеличения.</p>
+<p><a href="index.html">← Инструкция по установке ГБЦ</a></p></header>
+<nav class="toc" aria-label="Содержание"><b>Содержание</b><ol><li><a href="#coolant">Антифриз и отопитель</a></li><li><a href="#vacuum">Вакуум, усилитель тормозов и адсорбер</a></li><li><a href="#vent">Вентиляция картера</a></li><li><a href="#air">Компрессор, наддув и трубка выпуска</a></li><li><a href="#fuel">Топливная рампа</a></li><li><a href="#check">Проверка перед пуском и выездом</a></li></ol></nav>
+
+<section id="coolant"><h2>А. Антифриз и отопитель</h2>
+<div class="step"><div class="num">1</div><div><h3>Трубка отопителя сзади ГБЦ</h3><p>До установки впуска найди жёсткую трубку <b>23</b>, которая уходит к отопителю, и гнездо на задней части двигателя. Поставь новое уплотнение, вставь трубку ровно до упора и защёлкни скобу <b>24</b>. Слегка потяни трубку рукой и проверь, что она удерживается.</p>
+<figure><a class="zoom" href="images/02_p0130208209.png"><img class="diagram" src="images/02_p0130208209.png" alt="Трубка отопителя 23 и скоба 24 на верхнем среднем кадре"></a><figcaption>AR01.30-P-5800PK · верхний средний кадр — трубка 23 и скоба 24.</figcaption></figure></div></div>
+<div class="step"><div class="num">2</div><div><h3>Три патрубка на корпусе термостата</h3><p>Поставь корпус <b>30</b> с новым кольцом <b>31</b>. На рисунке WIS <b>2</b> — крупный патрубок на прямом выходе термостата, ветвь к верхнему штуцеру радиатора. <b>3</b> — короткий формованный отвод снизу корпуса к помпе. <b>4</b> — тонкий шланг на малом боковом штуцере. Для <b>4</b> на фото показан конец у корпуса. Второй конец проследи по штатной трассе машины перед заполнением.</p><p>Проверь состояние хомутов <b>2a</b> и <b>3a</b>, верни зажимы на их посадочные места. Подключи датчик температуры ОЖ <b>B11/4</b>.</p>
+<figure><a class="zoom" href="images/AR20.10-P-2710PK_01_p2010201909.png"><img class="diagram" src="images/AR20.10-P-2710PK_01_p2010201909.png" alt="Термостат и патрубки 2, 3 и 4"></a><figcaption>AR20.10-P-2710PK · слева фото передней части двигателя, справа посадочные места патрубков.</figcaption></figure></div></div>
+<div class="step"><div class="num">3</div><div><h3>Радиатор, бачок и крепление трубки у компрессора</h3><p>Если их отсоединяли, проверь нижнюю ветвь радиатора до помпы, линии расширительного бачка и обратную ветвь отопителя до штатных тройников. Трасса отопителя и дополнительных ветвей зависит от комплектации. Трубку «радиатор — помпа» верни в её крепление на узле штуцеров компрессора. В AR09.50-P-8841PK это отдельная позиция <b>2</b> с крепёжным винтом <b>1</b>.</p></div></div>
+<p class="meta">Источники · <a href="https://lemon-manuals.org.ua/Mercedes%20Benz/2005/C230%202D%20Coupe%2C%20Automatic/Repair%20and%20Diagnosis/Engine%20Mechanical/Mechanical/Complete%20Engine%20--%20Testing%20%26%20Repair%20--%20203%20Chassis%20-%202%20Of%203/Testing%20%26%20Repair/Remove%2Finstall%20cylinder%20head%20-%20AR01.30-P-5800PK/">ГБЦ и трубка отопителя</a> · <a href="https://lemon-manuals.la/Mercedes%20Benz/2003/C320%20Base%2C%204D%20Wagon%2C%20Automatic/Repair%20and%20Diagnosis/Engine%20Mechanical/Cooling%20System%20%28Mechanical%29/Cooling%20System%20--%20203%20Chassis/Testing%20%26%20Repair/Remove%2C%20install%20coolant%20thermostat%20housing%20-%20AR20.10-P-2710PK/">Корпус термостата</a> · <a href="https://charm.li/Mercedes%20Benz/2002/C%20230%20Kompressor%20%28203.747%29%20L4-2.3L%20SC%20%28111.981%29/Repair%20and%20Diagnosis/Powertrain%20Management/Fuel%20Delivery%20and%20Air%20Induction/Supercharger/Service%20and%20Repair/AR09.50-P-8841PK%20Remove%2FInstall%20Intake%20and%20Pressure%20Connection%20From%20Compressor/">Трубка у компрессора</a> · <a href="https://benzbits.com/w203/CoolantCircuit.pdf">Общая схема циркуляции W203</a></p></section>
+
+<section id="vacuum"><h2>Б. Вакуум, усилитель тормозов и адсорбер</h2>
+<figure><a class="zoom" href="images/01_p0130208109.png"><img class="diagram" src="images/01_p0130208109.png" alt="Фото узлов M56, Y32, топливной рампы и линии продувки"></a><figcaption>AR01.30-P-5800PK · сверху по центру M56 и линии 6/8, сверху справа Y32, снизу справа рампа 13 и линия продувки 15.</figcaption></figure>
+<div class="step"><div class="num">4</div><div><h3>Усилитель тормозов и насос M56 на 722.6</h3><p>Проследи штатную магистраль от вакуумного усилителя через обратный клапан к источнику разрежения. На версии с <b>722.6</b> восстанови соединения <b>6</b> и <b>8</b> по верхнему среднему кадру. <b>6</b> защёлкивается на электрическом вакуумном насосе <b>M56</b>. <b>8</b> на том же кадре входит в отдельный стык линии выше. Сверь оба конца по трассе и проверь фиксацию лёгким подтягиванием. Сохрани ориентацию штатного обратного клапана.</p></div></div>
+<div class="step"><div class="num">5</div><div><h3>Две тонкие трубки клапана Y32</h3><p>Закрепи электроклапан <b>Y32</b> на кронштейне <b>11</b> у впуска. Входная ветвь приходит от источника разрежения на впуске, управляемая ветвь идёт к мембранному клапану вторичного воздуха на стороне выпуска. Если обе трубки сняты с Y32, идентифицируй их по дальним концам и обозначениям на клапане. На обзорном фото разводка портов до конца не прослеживается. Если есть отдельный обратный клапан, сохрани его ориентацию по штатной схеме. Подключи фишку Y32.</p></div></div>
+<div class="step"><div class="num">6</div><div><h3>Продувка адсорбера Y58/1</h3><p>У впускного коллектора <b>14</b> верни линию <b>15</b> от клапана продувки <b>Y58/1</b>. Второй вывод клапана соединяется с магистралью паров, идущей от адсорбера. На схеме бака пары идут по линии <b>93</b>, подача топлива к двигателю обозначена отдельно как <b>92</b>. Если снимались обе линии, проследи их до штуцеров и подключи фишку клапана.</p></div></div>
+<p class="meta">Источники · <a href="https://lemon-manuals.org.ua/Mercedes%20Benz/2005/C230%202D%20Coupe%2C%20Automatic/Repair%20and%20Diagnosis/Engine%20Mechanical/Mechanical/Complete%20Engine%20--%20Testing%20%26%20Repair%20--%20203%20Chassis%20-%202%20Of%203/Testing%20%26%20Repair/Remove%2Finstall%20cylinder%20head%20-%20AR01.30-P-5800PK/">WIS, операции 5–12</a> · <a href="https://4vezde.com/wp-content/uploads/2023/10/1999.12_Mercedes_M111_Evo_M137_M112_M113.pdf">Учебный материал Mercedes по M111 EVO, принцип работы Y32</a> · <a href="https://charm.li/Mercedes%20Benz/2002/C%20230%20Kompressor%20%28203.747%29%20L4-2.3L%20SC%20%28111.981%29/Repair%20and%20Diagnosis/Powertrain%20Management/Fuel%20Delivery%20and%20Air%20Induction/Fuel%20Tank/Locations/">Схема бака и адсорбера 203.747</a></p></section>
+
+<section id="vent"><h2>В. Вентиляция картера</h2>
+<div class="step"><div class="num">7</div><div><h3>Шланг под впускным коллектором</h3><p>Пока снизу есть доступ, надень шланг <b>7</b> на Т-образный штуцер под впуском. Стрелка на схеме указывает именно на этот стык. Проверь обе ветви тройника к штуцерам со стороны ГБЦ. Осмотри резину на трещины, особенно у концов.</p>
+<figure><a class="zoom" href="images/AR01.30-P-5800-06GS_01_p0130024401.png"><img class="diagram" src="images/AR01.30-P-5800-06GS_01_p0130024401.png" alt="Тройник вентиляции картера под впуском и шланг 7"></a><figcaption>AR01.30-P-5800-06GS · нижний шланг 7, стрелка у тройника.</figcaption></figure></div></div>
+<div class="step"><div class="num">8</div><div><h3>Трубка сверху и отвод у компрессора</h3><p>Верни трубку вентиляции <b>16</b> на головку по нижнему среднему кадру общего щита. На отдельном листе компрессора вентиляционная линия <b>7</b> подключается к блоку входного и напорного штуцеров <b>3</b>. Проверь оба места, если снимал воздуховоды. Цифра 7 на двух листах относится к разным выноскам.</p></div></div>
+<p class="meta">Источники · <a href="https://lemon-manuals.org.ua/Mercedes%20Benz/2005/C230%202D%20Coupe%2C%20Automatic/Repair%20and%20Diagnosis/Engine%20Mechanical/Mechanical/Complete%20Engine%20--%20Testing%20%26%20Repair%20--%20203%20Chassis%20-%202%20Of%203/Testing%20%26%20Repair/Remove%2Finstall%20cylinder%20head%20-%20AR01.30-P-5800PK/">WIS, операции 13–16</a> · <a href="https://charm.li/Mercedes%20Benz/2002/C%20230%20Kompressor%20%28203.747%29%20L4-2.3L%20SC%20%28111.981%29/Repair%20and%20Diagnosis/Powertrain%20Management/Fuel%20Delivery%20and%20Air%20Induction/Supercharger/Service%20and%20Repair/AR09.50-P-8841PK%20Remove%2FInstall%20Intake%20and%20Pressure%20Connection%20From%20Compressor/">WIS, вентиляционный отвод компрессора</a></p></section>
+
+<section id="air"><h2>Г. Компрессор, наддув и трубка выпуска</h2>
+<div class="step"><div class="num">9</div><div><h3>Толстые воздушные патрубки</h3><p>Проверь тракт от корпуса фильтра и узла заслонки рециркуляции с резонатором к входу нагнетателя. Напорная труба <b>4</b> на отдельной схеме WIS соединяет напорный штуцер <b>3</b> с трактом интеркулера. При разъединении поставь новое кольцо <b>6</b>, посади соединение до упора и закрой скобу <b>5</b>. Проверь также выход интеркулера к дросселю, если снимал этот патрубок. В блоке штуцеров к нагнетателю при снятии меняется прокладка <b>11</b>.</p></div></div>
+<div class="step"><div class="num">10</div><div><h3>Жёсткая трубка 21 на стороне выпуска</h3><p>На общем щите трубка <b>21</b> видна в нижнем левом кадре. В заводской операции указаны стык у картера с новыми уплотнениями, задние кронштейны на ГБЦ и хомут <b>10</b> у кронштейна <b>11</b>. Верни трубку сначала в штатные посадочные места, затем закрепи кронштейны без натяга. Сюда же относятся опоры передней трубы выпуска, если их снимали.</p></div></div>
+<p class="meta">Источники · <a href="https://charm.li/Mercedes%20Benz/2002/C%20230%20Kompressor%20%28203.747%29%20L4-2.3L%20SC%20%28111.981%29/Repair%20and%20Diagnosis/Powertrain%20Management/Fuel%20Delivery%20and%20Air%20Induction/Supercharger/Service%20and%20Repair/AR09.50-P-8841PK%20Remove%2FInstall%20Intake%20and%20Pressure%20Connection%20From%20Compressor/">WIS AR09.50-P-8841PK, схема штуцеров нагнетателя</a> · <a href="https://lemon-manuals.org.ua/Mercedes%20Benz/2005/C230%202D%20Coupe%2C%20Automatic/Repair%20and%20Diagnosis/Engine%20Mechanical/Mechanical/Complete%20Engine%20--%20Testing%20%26%20Repair%20--%20203%20Chassis%20-%202%20Of%203/Testing%20%26%20Repair/Remove%2Finstall%20cylinder%20head%20-%20AR01.30-P-5800PK/">WIS, операции 7 и 20–23</a></p></section>
+
+<section id="fuel"><h2>Д. Топливная рампа</h2>
+<div class="step"><div class="num">11</div><div><h3>Подача бензина к рампе</h3><p>На общем фото рампа обозначена <b>13</b>. В отдельном листе WIS резьбовой подвод топлива — <b>17/2</b>, сервисный клапан рампы — <b>1/1</b>. Проверь уплотнения форсунок, посади рампу равномерно и подключи разъёмы. По таблице для M111.981 резьбовое соединение подачи топлива к рампе — <b>24 Н·м</b>, крепление рампы — <b>25 Н·м</b>. При повторном разъединении предварительно сбрось давление по WIS.</p></div></div>
+<p class="meta">Источник · <a href="https://lemon-manuals.org.ua/Mercedes%20Benz/2005/C230%202D%20Coupe%2C%20Automatic/Repair%20and%20Diagnosis/Engine%20Performance/Ignition%20System/Mixture%20Formation%20--%20Testing%20%26%20Repair%20--%20203%20Chassis/Testing%20%26%20Repair/Remove%20fuel%20distributor%20with%20injection%20valves%20-%20AR07.03-P-1450GS/">WIS AR07.03-P-1450GS, рисунок рампы и моменты</a></p></section>
+
+<section id="check"><h2>Е. Проверка перед пуском и выездом</h2>
+<ul class="check"><li><label><input type="checkbox"> Трубки под впуском на месте, скобы закрыты, магистрали сидят в держателях и проходят в стороне от ремня и выпуска.</label></li>
+<li><label><input type="checkbox"> Заправлена ОЖ. Сухие стыки корпуса термостата, радиатора, помпы и трубки отопителя. Подключён B11/4.</label></li>
+<li><label><input type="checkbox"> После подачи давления рампа, штуцер и посадки форсунок сухие. При запахе бензина или течи остановить проверку и устранить причину.</label></li>
+<li><label><input type="checkbox"> Подключены Y32, Y58/1 и M56, если предусмотрен. На месте проверено усиление тормозов. При твёрдой педали или утечке вакуума выезд отложить до проверки.</label></li>
+<li><label><input type="checkbox"> После прогрева проверены температура, работа отопителя и течи. После полного остывания повторно проверен уровень ОЖ.</label></li></ul>
+<p class="note">В бюллетене Mercedes P-B-20.30/28 для 203.747 с M111.981 указана вакуумная заправка системы охлаждения.</p>
+<p class="meta">Источник · <a href="https://www.billsden.org/fileadmin/media/mercedes/slk/docs/dtb_p_b_20_30_28.pdf">Бюллетень Mercedes по заполнению системы ОЖ</a> · <a href="https://charm.li/Mercedes%20Benz/2002/C%20230%20Kompressor%20%28203.747%29%20L4-2.3L%20SC%20%28111.981%29/Repair%20and%20Diagnosis/Engine%2C%20Cooling%20and%20Exhaust/Cooling%20System/Coolant/">Процедура AR20.00-P-1142PR в разделе ОЖ для 203.747</a></p></section>
+<footer><p>Расположение опций и дальние концы, которые не видны на фото, сверяй по VIN и фактической трассе. Особенно важны малый патрубок термостата, разводка портов Y32 и линии у отопителя.</p></footer>
+</main><dialog id="photo" aria-label="Увеличенное изображение"><form method="dialog"><button aria-label="Закрыть изображение">Закрыть ×</button></form><img alt=""></dialog>
+<script>
+const dialog = document.querySelector('#photo');
+const enlarged = dialog.querySelector('img');
+document.querySelectorAll('.zoom').forEach((link) => {
+  link.addEventListener('click', (event) => {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    enlarged.src = link.href;
+    enlarged.alt = link.querySelector('img').alt;
+    dialog.showModal();
+  });
+});
+dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+</script></body></html>
