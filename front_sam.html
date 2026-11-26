@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Передний SAM — предохранители и реле CL203</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f3efe6; color: #1c1915; font: 16px/1.5 "Segoe UI", system-ui, sans-serif; }
+    main { max-width: 980px; margin: auto; padding: 24px 18px 56px; }
+    header, section { background: #fffcf7; border: 1px solid #ddd4c4; border-radius: 16px; padding: clamp(14px, 3vw, 24px); margin: 0 0 16px; }
+    h1, h2 { line-height: 1.2; margin: 0 0 12px; }
+    h1 { font-size: clamp(24px, 5vw, 34px); }
+    h2 { font-size: 21px; }
+    a { color: #1e40af; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px; }
+    .back { display: inline-block; margin-bottom: 12px; }
+    .meta, figcaption, footer { color: #5e584e; }
+    figure { margin: 0; }
+    img { display: block; width: 100%; max-width: 760px; height: auto; margin: 0 auto 10px; }
+    figcaption { font-size: 14px; }
+    table { border-collapse: collapse; width: 100%; font-size: 15px; }
+    th, td { padding: 7px clamp(4px, 1.1vw, 10px); border: 1px solid #ddd4c4; text-align: left; vertical-align: top; }
+    thead { background: #efe2c8; }
+    tbody th, .number { white-space: nowrap; }
+    .focus { background: #fff1d9; }
+    .note { margin: 12px 0 0; }
+    footer a { display: inline-block; margin: 4px 16px 0 0; }
+    @media print {
+      body, header, section { background: white; }
+      main { padding: 0; }
+      nav, .back { display: none; }
+      tr, figure { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="index.html">← К ремонту ГБЦ</a>
+    <header>
+      <h1>Передний SAM N10/1</h1>
+      <p class="meta">Mercedes-Benz C 230 Kompressor Sportcoupé (CL203.747) · M111.981 · Sequentronic 716.6</p>
+      <nav aria-label="Разделы страницы">
+        <a href="#layout">Схема блока</a>
+        <a href="#relays">Реле</a>
+        <a href="#fuses">Предохранители</a>
+      </nav>
+    </header>
+    <section id="layout">
+      <h2>Расположение реле и предохранителей</h2>
+      <figure>
+        <a href="images/front_sam_n10-1.png"><img src="images/front_sam_n10-1.png" width="611" height="310" alt="Схема переднего SAM с позициями реле I–S и предохранителей 43a–65"></a>
+        <figcaption>Блок в левой части моторного отсека. Заводская иллюстрация Daimler P54.15-2205-06.</figcaption>
+      </figure>
+      <p class="note">Выделены позиции, относящиеся к проверке питания ESP/BAS и Sequentronic. Заполнение гнёзд зависит от комплектации и даты выпуска. Для конкретного автомобиля сверяй расположение и номиналы по VIN.</p>
+    </section>
+    <section id="relays">
+      <h2>Реле</h2>
+      <table aria-label="Реле переднего SAM">
+        <thead><tr><th scope="col">Позиция</th><th scope="col">Назначение</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">I</th><td>Звуковой сигнал</td></tr>
+          <tr class=focus><th scope="row">K</th><td>Реле питания шасси, клемма 87</td></tr>
+          <tr><th scope="row">L</th><td>Переключение первой и второй скорости стеклоочистителя</td></tr>
+          <tr><th scope="row">M</th><td>Реле клеммы 15R</td></tr>
+          <tr class=focus><th scope="row">N</th><td>Реле насоса гидропривода Sequentronic (код 424)</td></tr>
+          <tr><th scope="row">O</th><td>Реле насоса вторичного воздуха (двигатели M112, M113, M271)</td></tr>
+          <tr><th scope="row">P</th><td>Реле клеммы 15</td></tr>
+          <tr><th scope="row">Q</th><td>Включение и выключение стеклоочистителя</td></tr>
+          <tr><th scope="row">R</th><td>Реле питания электроники двигателя, клемма 87</td></tr>
+          <tr><th scope="row">S</th><td>Реле стартера</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="fuses">
+      <h2>Предохранители</h2>
+      <table aria-label="Предохранители переднего SAM">
+        <thead><tr><th scope="col">№</th><th scope="col">Ток, А</th><th scope="col">Клемма</th><th scope="col">Защищаемая цепь</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">43a</th><td>15</td><td>30</td><td>Реле звукового сигнала I, питание от постоянного плюса</td></tr>
+          <tr><th scope="row">43b</th><td>15</td><td>15R</td><td>Реле звукового сигнала I, питание от клеммы 15R</td></tr>
+          <tr><th scope="row">44</th><td>5</td><td>15R</td><td>Телефон / TELE AID / подготовка под телефон (коды 853, 855, 386)</td></tr>
+          <tr><th scope="row">45</th><td>7,5</td><td>15R</td><td>Блок управления подушками и преднатяжителями (N2/7)</td></tr>
+          <tr><th scope="row">46</th><td>40</td><td>15</td><td>Реле стеклоочистителя Q и L</td></tr>
+          <tr><th scope="row">47</th><td>15</td><td>15R</td><td>Подсветка вещевого ящика и передний прикуриватель</td></tr>
+          <tr><th scope="row">48</th><td>15</td><td>15</td><td>В зависимости от двигателя: питание цепи 15 на M112/M113, блок вакуумного насоса тормозов на OM612.990 до 31.03.2004 или цепь питания на отдельных OM646</td></tr>
+          <tr><th scope="row">49</th><td>7,5</td><td>15</td><td>Блок управления подушками и преднатяжителями (N2/7)</td></tr>
+          <tr><th scope="row">50</th><td>5</td><td>15</td><td>Блок выключателя света (S1). На отдельных OM612.990 также блок свечей накаливания или расходомер, в зависимости от даты выпуска</td></tr>
+          <tr><th scope="row">51</th><td>7,5</td><td>15</td><td>Комбинация приборов (A1), цепь управления вентилятором охлаждения. В зависимости от исполнения также датчики климат-контроля, передние фары, блок параметрического рулевого управления или насос охлаждения наддувочного воздуха AMG</td></tr>
+          <tr><th scope="row">52</th><td>15</td><td>50</td><td>Цепь управления стартером (M1)</td></tr>
+          <tr><th scope="row">53</th><td>15 / 25</td><td>87</td><td>Реле стартера S, задний SAM, блок управления двигателем. 15 А для бензиновых двигателей, включая M111. 25 А для дизельных</td></tr>
+          <tr><th scope="row">54</th><td>7,5 / 15</td><td>87</td><td>Цепи управления двигателем и системы улавливания паров топлива на M271. На отдельных дизелях — блок CDI, питание клеммы 30 или подогрев линии вентиляции. Назначение и номинал зависят от двигателя</td></tr>
+          <tr class=focus><th scope="row">55</th><td>7,5</td><td>87</td><td>Датчик угла руля (N49). С Sequentronic — блок N15/6 и выключатель распознавания передачи S16/10. В других комплектациях — соответствующие блоки АКПП и, при наличии, Distronic</td></tr>
+          <tr class=focus><th scope="row">56</th><td>5</td><td>87</td><td>Блок ESP/BAS (N47-5) и выключатель стоп-сигналов (S9/1)</td></tr>
+          <tr><th scope="row">57</th><td>5</td><td>30z</td><td>Электронный замок зажигания EZS (N73), датчик угла руля до 31.05.2002 или модуль рулевой колонки с 01.06.2002. На M112/M113 также блок управления двигателем</td></tr>
+          <tr class=focus><th scope="row">58</th><td>40</td><td>30</td><td>Гидравлический насос Sequentronic (M46)</td></tr>
+          <tr class=focus><th scope="row">59</th><td>50</td><td>30</td><td>Постоянное питание блока ESP/BAS (N47-5)</td></tr>
+          <tr class=focus><th scope="row">60</th><td>40</td><td>30</td><td>Вторая цепь постоянного питания блока ESP/BAS (N47-5)</td></tr>
+          <tr class=focus><th scope="row">61</th><td>15</td><td>30</td><td>Постоянное питание блока Sequentronic (N15/6)</td></tr>
+          <tr><th scope="row">62</th><td>5</td><td>30</td><td>Диагностический разъём, блок выключателя света и выключатель стоп-сигналов</td></tr>
+          <tr><th scope="row">63</th><td>5</td><td>30</td><td>Блок выключателя света (S1)</td></tr>
+          <tr><th scope="row">64</th><td>10</td><td>30</td><td>Штатная аудиосистема или COMAND, в зависимости от комплектации</td></tr>
+          <tr><th scope="row">65</th><td>40</td><td>15</td><td>Электрический насос вторичного воздуха (M112/M113)</td></tr>
+        </tbody>
+      </table>
+      <p class="note"><strong>Клеммы:</strong> 30 — постоянное питание, 15 — питание при включённом зажигании, 15R — питание потребителей в положении ключа 1 и при включённом зажигании, 50 — сигнал пуска, 87 — питание с выхода реле.</p>
+    </section>
+    <footer>
+      <a href="https://benzbits.com/w203/FrontRelays.pdf">Daimler GF54.15-P-1257-03P — реле (PDF)</a>
+      <a href="https://benzbits.com/w203/FrontFuses.pdf">Daimler GF54.15-P-1256-03P — предохранители (PDF)</a>
+    </footer>
+  </main>
+</body>
+</html>
